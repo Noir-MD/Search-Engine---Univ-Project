@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Results for "{{ query }}"</h1>
+    {% if results %}
+        <ul>
+        {% for title, content in results %}
+            <li>
+                <strong>{{ title }}</strong>: {{ content }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+    <a href="{{ url_for('index') }}">Back to search</a>
+</body>
+</html>
