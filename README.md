@@ -1,4 +1,4 @@
-# install flask dan mysql.connector
+# install flask dan mysql.connector untuk python
 pip install mysql-connector-python
 pip install flask
 
