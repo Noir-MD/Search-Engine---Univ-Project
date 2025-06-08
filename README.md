@@ -1,9 +1,9 @@
 # install flask dan mysql.connector untuk python
-- > pip install mysql-connector-python
-- > pip install flask
+- pip install mysql-connector-python
+- pip install flask
 
 # Jalankan apk python
-> python [Nama File].py
+python [Nama File].py
 
 # jalankan 
 pip install -r requirements.txt
