@@ -25,20 +25,27 @@
             {% endif %}
         </div>
 
-        {% if results %}
-            <ul class="result-list">
-                {% for url, rank in results %}
-                    <li class="result-item">
-                        <a href="{{ url }}" target="_blank" class="result-url">{{ url }}</a>
-                        <div class="rank-container">
-                           <span class="rank">PageRank: {{ "%.4f"|format(rank or 0.0) }}</span>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p class="no-result">No results found for "<strong>{{ query }}</strong>".</p>
-        {% endif %}
+            {% if results %}
+                <ul class="result-list">
+                    {% for url, title, content, rank in results %}
+                        <li class="result-item">
+                            <h3 class="result-title">
+                                <a href="{{ url }}" target="_blank" class="result-url">
+                                    {{ title if title else url }}
+                                </a>
+                            </h3>
+                            <div class="result-content">
+                                <p>{{ content[:250] }}{% if content and content|length > 250 %}...{% endif %}</p>
+                            </div>
+                            <div class="rank-container">
+                                <span class="rank">PageRank: {{ "%.4f"|format(rank or 0.0) }}</span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-result">No results found for "<strong>{{ query }}</strong>".</p>
+            {% endif %}
 
         {% if total_pages > 1 %}
         <div class="pagination">
