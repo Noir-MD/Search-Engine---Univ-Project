@@ -2,27 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Search Results</title>
+    <title>Search Results for "{{ query }}"</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='Style/Style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>Results for "{{ query }}"</h1>
+        <div class="search-header">
+            <a href="{{ url_for('index') }}" class="logo">Search Engine</a>
+            <form action="{{ url_for('search') }}" method="get" class="header-form">
+                <input type="text" name="query" value="{{ query }}" required>
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+
+        <hr>
+
+        <div class="results-summary">
+            {% if total_results > 0 %}
+                <p>Page {{ page }} of approximately {{ total_results }} results.</p>
+            {% endif %}
+        </div>
+
         {% if results %}
             <ul class="result-list">
                 {% for url, rank in results %}
-                    <li>
-                        <a href="{{ url }}" target="_blank"><strong>{{ url }}</strong></a>
-                        <br>
-                        <span style="color: gray; font-size: 0.9em;">(PageRank: {{ "%.4f"|format(rank or 0.0) }})</span>
+                    <li class="result-item">
+                        <a href="{{ url }}" target="_blank" class="result-url">{{ url }}</a>
+                        <div class="rank-container">
+                           <span class="rank">PageRank: {{ "%.4f"|format(rank or 0.0) }}</span>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p class="no-result">No results found.</p>
+            <p class="no-result">No results found for "<strong>{{ query }}</strong>".</p>
         {% endif %}
-        <a href="{{ url_for('index') }}" class="back-button">← Back to search</a>
+
+        {% if total_pages > 1 %}
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="{{ url_for('search', query=query, page=page-1) }}">&laquo; Previous</a>
+            {% endif %}
+
+            {% for p in range(1, total_pages + 1) %}
+                {% if p == page %}
+                    <span class="active">{{ p }}</span>
+                {% else %}
+                    <a href="{{ url_for('search', query=query, page=p) }}">{{ p }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page < total_pages %}
+                <a href="{{ url_for('search', query=query, page=page+1) }}">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
 </body>
 </html>
