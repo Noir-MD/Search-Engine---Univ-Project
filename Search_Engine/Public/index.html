@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Search Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../static/Style/Style.css">
 </head>
 <body>
     <h1>Search</h1>
     <form action="{{ url_for('search') }}" method="post">
         <input type="text" name="query" placeholder="Enter search term" required>
-        <button type="submit">Search</button>
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
     </form>
 </body>
 </html>
