@@ -3,20 +3,26 @@ import mysql.connector
 
 app = Flask(__name__, template_folder='public')
 
-# Connect To Database
+# Konfigurasi koneksi database
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',         
+    'password': '',
     'database': 'search'
 }
 
 def search_database(query):
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
-    sql = "SELECT title, content FROM documents WHERE title LIKE %s OR content LIKE %s"
+    sql = """
+        SELECT p.url, pr.rank
+        FROM pages p
+        LEFT JOIN pagerank pr ON p.id = pr.page_id
+        WHERE p.url LIKE %s
+        ORDER BY pr.rank DESC
+    """
     wildcard_query = f"%{query}%"
-    cursor.execute(sql, (wildcard_query, wildcard_query))
+    cursor.execute(sql, (wildcard_query,))
     results = cursor.fetchall()
     conn.close()
     return results

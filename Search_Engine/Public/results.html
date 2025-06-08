@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Search Results</title>
-    <link rel="stylesheet" href="../static/Style/Style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Style/Style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -11,9 +11,11 @@
         <h1>Results for "{{ query }}"</h1>
         {% if results %}
             <ul class="result-list">
-                {% for title, content in results %}
+                {% for url, rank in results %}
                     <li>
-                        <strong>{{ title }}</strong>: {{ content }}
+                        <a href="{{ url }}" target="_blank"><strong>{{ url }}</strong></a>
+                        <br>
+                        <span style="color: gray; font-size: 0.9em;">(PageRank: {{ "%.4f"|format(rank or 0.0) }})</span>
                     </li>
                 {% endfor %}
             </ul>

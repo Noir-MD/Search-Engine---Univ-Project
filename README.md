@@ -6,7 +6,7 @@
 python [Nama File].py
 
 # jalankan 
+python -m venv .venv
+.\.venv\Scripts\activate  # Windows
 pip install -r requirements.txt
-
-# kalau mau import link
-python import_links.py
+python app.py  # atau nama file utamanya

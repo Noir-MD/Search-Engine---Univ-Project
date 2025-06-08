@@ -1,10 +1,11 @@
-import mysql.connector
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # Koneksi ke database
-db = mysql.connector.connect(
+db = pymysql.connect(
     host='localhost',
     user='root',
-    password='',  # ganti kalau pakai password
+    password='',
     database='search'
 )
 cursor = db.cursor()
