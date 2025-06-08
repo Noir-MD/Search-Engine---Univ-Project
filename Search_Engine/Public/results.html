@@ -1,26 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Search Results</title>
-    <link rel="stylesheet" href="../static/Style/Style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Style/Style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Results for "{{ query }}"</h1>
-        {% if results %}
-            <ul class="result-list">
-                {% for title, content in results %}
-                    <li>
-                        <strong>{{ title }}</strong>: {{ content }}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p class="no-result">No results found.</p>
-        {% endif %}
-        <a href="{{ url_for('index') }}" class="back-button">← Back to search</a>
-    </div>
+    <h1>Results for "{{ query }}"</h1>
+    {% if results %}
+        <ul>
+        {% for title, content in results %}
+            <li>
+                <strong>{{ title }}</strong>: {{ content }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+    <a href="{{ url_for('index') }}">Back to search</a>
 </body>
 </html>
