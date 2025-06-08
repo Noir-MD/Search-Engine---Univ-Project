@@ -9,7 +9,7 @@ db_config = {
     'database': 'search_engine'
 }
 
-# Step 1: Ambil data link dari database
+# Step 1: Ambil data link dari database (pastikan tabel links ada kolom from_page dan to_page yang mengacu ke pages.id)
 def get_links():
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
@@ -25,25 +25,20 @@ def compute_pagerank(edges):
     pr = nx.pagerank(G, alpha=0.85)
     return pr
 
-# Step 3: Simpan hasil ke database
+# Step 3: Simpan hasil ke tabel pages (kolom: id, title, url, content, pagerank)
 def save_pagerank(pagerank_scores):
     conn = mysql.connector.connect(**db_config)
     cursor = conn.cursor()
 
-    # Buat tabel jika belum ada
+    # Tambahkan kolom pagerank jika belum ada
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS pagerank (
-            page_id INT PRIMARY KEY,
-            rank FLOAT
-        )
+        ALTER TABLE pages
+        ADD COLUMN IF NOT EXISTS pagerank FLOAT
     """)
 
-    # Hapus data lama
-    cursor.execute("DELETE FROM pagerank")
-
-    # Masukkan data baru
+    # Update nilai pagerank untuk setiap halaman
     for page_id, score in pagerank_scores.items():
-        cursor.execute("INSERT INTO pagerank (page_id, rank) VALUES (%s, %s)", (page_id, score))
+        cursor.execute("UPDATE pages SET pagerank = %s WHERE id = %s", (score, page_id))
 
     conn.commit()
     conn.close()

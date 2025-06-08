@@ -1,12 +1,10 @@
-# models/database_models.py (Alternative Method)
-
 import mysql.connector
 
 db_config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'search'
+    'database': 'search_engine'
 }
 
 def search_database(query):
@@ -16,26 +14,25 @@ def search_database(query):
     # Split the user's query into individual words
     search_words = query.split()
 
-    # Base of the SQL query
+    # Base SQL: ambil url, title, content, rank
     sql = """
-        SELECT p.url, pr.rank
+        SELECT p.url, p.title, p.content, IFNULL(pr.rank, 0)
         FROM pages p
         LEFT JOIN pagerank pr ON p.id = pr.page_id
     """
 
-    # Dynamically add a 'WHERE ... LIKE' clause for each word
+    # WHERE: cari di title atau content
     if search_words:
-        # Creates a list of "p.url LIKE %s" conditions
-        where_clauses = ["p.url LIKE %s"] * len(search_words)
-        # Joins them with " AND "
+        where_clauses = ["(p.title LIKE %s OR p.content LIKE %s)"] * len(search_words)
         sql += " WHERE " + " AND ".join(where_clauses)
 
-    # Add the final ordering
     sql += " ORDER BY pr.rank DESC"
 
-    # Create the parameters, adding wildcards to each word
-    # e.g., ['seleksi', 'mandiri'] becomes ['%seleksi%', '%mandiri%']
-    params = [f"%{word}%" for word in search_words]
+    # Parameter: setiap kata untuk title dan content
+    params = []
+    for word in search_words:
+        like = f"%{word}%"
+        params.extend([like, like])
 
     cursor.execute(sql, params)
     results = cursor.fetchall()
